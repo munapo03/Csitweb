@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student ID Card Generator</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #eef4ff, #dce8ff);
+    padding: 30px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+}
+
+h1 {
+    text-align: center;
+    color: #173b75;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 35px;
+}
+
+.form-section {
+    padding: 10px;
+}
+
+.form-section h2 {
+    color: #173b75;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #333;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+button {
+    border: none;
+    padding: 13px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.generate {
+    background: #2563eb;
+    color: white;
+    width: 100%;
+}
+
+.generate:hover {
+    background: #174fc4;
+}
+
+/* ID CARD */
+
+.preview-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.preview-section h2 {
+    color: #173b75;
+    margin-bottom: 20px;
+}
+
+.id-card {
+    width: 360px;
+    height: 560px;
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    position: relative;
+    border: 2px solid #173b75;
+}
+
+.card-header {
+    height: 125px;
+    background: linear-gradient(135deg, #173b75, #2563eb);
+    color: white;
+    text-align: center;
+    padding: 20px 10px;
+}
+
+.school-name {
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.school-type {
+    font-size: 12px;
+    margin-top: 6px;
+    opacity: 0.9;
+}
+
+.photo-container {
+    width: 125px;
+    height: 125px;
+    background: #eee;
+    border: 5px solid white;
+    border-radius: 50%;
+    position: absolute;
+    top: 75px;
+    left: 50%;
+    transform: translateX(-50%);
+    overflow: hidden;
+}
+
+.photo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.student-info {
+    margin-top: 90px;
+    padding: 0 28px;
+    text-align: left;
+}
+
+.student-name {
+    text-align: center;
+    font-size: 23px;
+    color: #173b75;
+    font-weight: bold;
+    margin-bottom: 18px;
+}
+
+.info-row {
+    display: flex;
+    margin: 9px 0;
+    font-size: 13px;
+}
+
+.info-label {
+    width: 100px;
+    font-weight: bold;
+    color: #555;
+}
+
+.info-value {
+    color: #111;
+    flex: 1;
+}
+
+.card-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: #173b75;
+    color: white;
+    padding: 13px;
+    text-align: center;
+    font-size: 11px;
+}
+
+.download {
+    background: #16a34a;
+    color: white;
+    width: 360px;
+}
+
+.download:hover {
+    background: #12803a;
+}
+
+@media(max-width: 800px) {
+    body {
+        padding: 15px;
+    }
+
+    .main {
+        grid-template-columns: 1fr;
+    }
+
+    .id-card {
+        width: 330px;
+        height: 515px;
+    }
+
+    .download {
+        width: 330px;
+    }
+}
+
+@media print {
+    body {
+        background: white;
+        padding: 0;
+    }
+
+    .container {
+        box-shadow: none;
+    }
+
+    .form-section,
+    .preview-section h2,
+    .download,
+    h1,
+    .subtitle {
+        display: none;
+    }
+
+    .main {
+        display: block;
+    }
+
+    .preview-section {
+        display: flex;
+    }
+
+    .id-card {
+        box-shadow: none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Student ID Card Generator</h1>
+<p class="subtitle">
+Create a professional student ID card instantly
+</p>
+
+<div class="main">
+
+<!-- FORM -->
+
+<div class="form-section">
+
+<h2>Student Information</h2>
+
+<label>School / College Name</label>
+<input
+type="text"
+id="school"
+placeholder="Enter school name"
+value="Divya Gyan College"
+>
+
+<label>Student Name</label>
+<input
+type="text"
+id="name"
+placeholder="Enter student name"
+>
+
+<label>Student ID</label>
+<input
+type="text"
+id="studentId"
+placeholder="e.g. STU-2026-001"
+>
+
+<label>Class</label>
+<select id="class">
+<option value="">Select Class</option>
+<option>Nursery</option>
+<option>KG</option>
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+<option>5</option>
+<option>6</option>
+<option>7</option>
+<option>8</option>
+<option>9</option>
+<option>10</option>
+<option>11</option>
+<option>12</option>
+</select>
+
+<label>Section</label>
+<input
+type="text"
+id="section"
+placeholder="e.g. A"
+>
+
+<label>Date of Birth</label>
+<input
+type="date"
+id="dob"
+>
+
+<label>Blood Group</label>
+<select id="blood">
+<option value="">Select blood group</option>
+<option>A+</option>
+<option>A-</option>
+<option>B+</option>
+<option>B-</option>
+<option>AB+</option>
+<option>AB-</option>
+<option>O+</option>
+<option>O-</option>
+</select>
+
+<label>Phone</label>
+<input
+type="text"
+id="phone"
+placeholder="Student phone number"
+>
+
+<label>Address</label>
+<textarea
+id="address"
+rows="3"
+placeholder="Student address"
+></textarea>
+
+<label>Student Photo</label>
+<input
+type="file"
+id="photo"
+accept="image/*"
+>
+
+<button class="generate" onclick="generateCard()">
+Generate ID Card
+</button>
+
+</div>
+
+
+<!-- PREVIEW -->
+
+<div class="preview-section">
+
+<h2>Live Preview</h2>
+
+<div class="id-card" id="idCard">
+
+<div class="card-header">
+
+<div class="school-name" id="previewSchool">
+Mohanmaya Secondary School
+</div>
+
+<div class="school-type">
+STUDENT IDENTIFICATION CARD
+</div>
+
+</div>
+
+<div class="photo-container">
+
+<img
+id="previewPhoto"
+src="https://via.placeholder.com/150"
+alt="Student Photo"
+>
+
+</div>
+
+<div class="student-info">
+
+<div class="student-name" id="previewName">
+Student Name
+</div>
+
+<div class="info-row">
+<div class="info-label">Student ID:</div>
+<div class="info-value" id="previewId">---</div>
+</div>
+
+<div class="info-row">
+<div class="info-label">Class:</div>
+<div class="info-value" id="previewClass">---</div>
+</div>
+
+<div class="info-row">
+<div class="info-label">Section:</div>
+<div class="info-value" id="previewSection">---</div>
+</div>
+
+<div class="info-row">
+<div class="info-label">DOB:</div>
+<div class="info-value" id="previewDob">---</div>
+</div>
+
+<div class="info-row">
+<div class="info-label">Blood:</div>
+<div class="info-value" id="previewBlood">---</div>
+</div>
+
+<div class="info-row">
+<div class="info-label">Phone:</div>
+<div class="info-value" id="previewPhone">---</div>
+</div>
+
+<div class="info-row">
+<div class="info-label">Address:</div>
+<div class="info-value" id="previewAddress">---</div>
+</div>
+
+</div>
+
+<div class="card-footer">
+Valid for the current academic year
+</div>
+
+</div>
+
+<button class="download" onclick="window.print()">
+🖨️ Print / Save ID Card
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+function generateCard() {
+
+    document.getElementById("previewSchool").textContent =
+        document.getElementById("school").value || "School / College Name";
+
+    document.getElementById("previewName").textContent =
+        document.getElementById("name").value || "Student Name";
+
+    document.getElementById("previewId").textContent =
+        document.getElementById("studentId").value || "---";
+
+    document.getElementById("previewClass").textContent =
+        document.getElementById("class").value || "---";
+
+    document.getElementById("previewSection").textContent =
+        document.getElementById("section").value || "---";
+
+    let dob = document.getElementById("dob").value;
+
+    if (dob) {
+        let date = new Date(dob);
+        document.getElementById("previewDob").textContent =
+            date.toLocaleDateString();
+    } else {
+        document.getElementById("previewDob").textContent = "---";
+    }
+
+    document.getElementById("previewBlood").textContent =
+        document.getElementById("blood").value || "---";
+
+    document.getElementById("previewPhone").textContent =
+        document.getElementById("phone").value || "---";
+
+    document.getElementById("previewAddress").textContent =
+        document.getElementById("address").value || "---";
+}
+
+
+/* PHOTO UPLOAD */
+
+document.getElementById("photo").addEventListener("change", function(event) {
+
+    const file = event.target.files[0];
+
+    if (file) {
+
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+
+            document.getElementById("previewPhoto").src =
+                e.target.result;
+
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+});
+
+</script>
+
+</body>
+</html>
